@@ -1,0 +1,106 @@
+syntax = "proto3";
+option java_package = "com.zxs.vertxim.common.msg";
+// 消息体名称
+option java_outer_classname = "MessageProto";
+enum HeadType
+{
+  LOGIN_REQUEST = 0;//登陆请求
+  LOGIN_RESPONSE = 1;//登录响应
+  LOGOUT_REQUEST = 2;//退出请求
+  LOGOUT_RESPONSE = 3;
+  KEEPALIVE_REQUEST = 4;//心跳请求PING;
+  KEEPALIVE_RESPONSE = 5;
+  MESSAGE_REQUEST = 6;//消息请求;
+  MESSAGE_RESPONSE = 7;//消息回执;
+  MESSAGE_NOTIFICATION = 8;//通知消息
+}
+/*登录信息*/
+// LoginRequest对应的HeadType为Login_Request
+// 消息名称去掉下划线，更加符合Java 的类名规范
+message LoginRequest{
+     string uid = 1;        // 用户唯一id
+     string deviceId = 2;     // 设备ID
+     string token = 3;       // 用户token
+     uint32 platform = 4;      //客户端平台 windows、mac、android、ios、web
+     string app_version = 5;    // APP版本号
+}
+//token说明: 账号服务器登录时生成的Token
+/*登录响应*/
+message LoginResponse{
+     bool  result = 1; //true 表示成功，false表示失败
+     uint32 code = 2;   //错误码
+     string info = 3;   //错误描述
+     uint32 expose = 4; //错误描述是否提示给用户:1 提示;0 不提示
+     string session_id = 5;     //sessionId
+}
+
+message LoginOutRequest{
+     string uid = 1;        // 用户唯一id
+     string deviceId = 2;     // 设备ID
+     string token = 3;       // 用户token
+     uint32 platform = 4;      //客户端平台 windows、mac、android、ios、web
+     string app_version = 5;    // APP版本号
+}
+//token说明: 账号服务器登录时生成的Token
+/*登录响应*/
+message LoginOutResponse{
+     bool  result = 1; //true 表示成功，false表示失败
+     uint32 code = 2;   //错误码
+     string info = 3;   //错误描述
+     uint32 expose = 4; //错误描述是否提示给用户:1 提示;0 不提示
+     string session_id = 5;     //sessionId
+}
+
+
+
+/*聊天消息*/
+message MessageRequest{
+     bool is_private =1;       // 私聊还是群聊
+     string session_id = 2;      //sessionId
+     string from = 3;       //发送方uId
+     string to = 4;         //接收方Id
+     uint32 msg_type = 5;  //消息类型  1：纯文本  2：音频 3：视频 4：地理位置 5：其他
+     string content = 6;  //消息内容
+}
+
+/*聊天响应*/
+message MessageResponse
+{
+     bool result = 1; //true表示发送成功，false表示发送失败
+     uint32 code = 2;   //错误码
+     string info = 3;   //错误描述
+     uint32 expose = 4; //错误描述是否提示给用户:1 提示;0 不提示
+     bool last_block = 5;
+     fixed32 block_index = 6;
+}
+
+/*通知消息*/
+message Notification
+{
+  bool is_private =1; // 私聊还是群聊
+  bool is_order =2;  // 普通消息还是命令消息
+  string from =3; //谁发的
+  string to =4; //发给谁的
+  uint32 msg_type = 5;  //消息类型  1：纯文本  2：音频 3：视频 4：地理位置 5：其他
+  string order_name =6; // 如果是命令消息，消息的名字
+  string content = 7; // 消息内容
+  string timestamp = 8; // 发送时间
+}
+
+/*顶层消息*/
+//顶层消息是一种嵌套消息，嵌套了各种类型消息
+//内部的消息类型，全部使用optional字段
+//根据消息类型 type的值，最多只有一个有效
+message Message
+{
+  HeadType type = 1; //消息类型
+  uint64   sequence = 2;//消息id
+  fixed32  session_id =3;
+  LoginRequest loginRequest = 4;
+  LoginResponse loginResponse = 5;
+  LoginOutRequest loginOutRequest = 6;
+  LoginOutResponse loginOutResponse = 7;
+  MessageRequest messageRequest = 8;
+  MessageResponse messageResponse = 9;
+  Notification notification = 10;
+}
