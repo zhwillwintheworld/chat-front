@@ -4,18 +4,20 @@ import {Message} from "../protos/Message";
 export default defineComponent(()=>{
     let ws:WebSocket ;
     const init = ()=>{
-        ws = new WebSocket('ws://localhost:8889/ws')
+        ws = new WebSocket('ws://localhost:8889/')
         ws.onclose = close;
         ws.onerror = onError;
         ws.onopen = open;
         ws.onmessage = message;
     }
     const open = ()=>{
+        // 设置接收的二进制为array buffer而不是blob
+        ws.binaryType = "arraybuffer";
         console.log("connect success")
     }
-    const message = (me:MessageEvent): void =>{
-        let message = Message.decode(me.data);
-        console.log(message)
+    const message = (me:MessageEvent<Uint8Array>): void =>{
+        console.log("收到数据")
+        console.log(Message.decode(new Uint8Array(me.data)));
     }
 
     const close = ()=>{  //关闭

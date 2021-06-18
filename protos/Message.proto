@@ -1,5 +1,5 @@
 syntax = "proto3";
-option java_package = "com.zxs.vertxim.common.msg";
+option java_package = "com.zxs.im.common.msg";
 // 消息体名称
 option java_outer_classname = "MessageProto";
 enum HeadType
@@ -51,6 +51,15 @@ message LoginOutResponse{
      string session_id = 5;     //sessionId
 }
 
+message KeepAliveRequest{
+     string uid = 1; // 用户唯一id
+}
+
+message KeepAliveResponse{
+     bool  result = 1; //true 表示成功，false表示失败
+     uint32 code = 2;   //错误码
+     string info = 3;   //错误描述
+}
 
 
 /*聊天消息*/
