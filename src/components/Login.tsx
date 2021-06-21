@@ -11,7 +11,7 @@ export default defineComponent(()=>{
         platform:3,
     });
     let rules ={
-        username:[
+        userName:[
             {
                 required: true,
                 message: '请输入账号',
@@ -32,7 +32,7 @@ export default defineComponent(()=>{
        let result:AxiosResponse<Result> = await Login(toRaw(formState));
        if(result.data!=null&&result.data.code === 200){
            localStorage.setItem("token",result.data.data)
-           await router.push({path:"/chat"});
+           await router.push("/chat")
        }else{
 
        }
@@ -45,7 +45,7 @@ export default defineComponent(()=>{
             <div id="content">
                 <div id="login">
                     <a-form ref={formRef} model={formState} rules={rules}>
-                        <a-form-item label="账号" name="username">
+                        <a-form-item label="账号" name="userName">
                             <a-input v-model={[formState.userName,'value']} />
                         </a-form-item>
                         <a-form-item  label="密码" name="password">

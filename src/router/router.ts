@@ -1,23 +1,22 @@
 import {
-    createWebHashHistory,
+    createWebHistory,
     createRouter
 } from "vue-router";
-import Login from '../components/Login'
-import Chat from '../components/Chat'
+
 
 let routes =[
     {
         path:"/",
-        component: ()=> Login
+        component: ()=> import("../components/Login")
     },
     {
         path: "/chat",
-        component: ()=> Chat
+        component: ()=> import("../components/Chat")
     }
 ];
 
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes, // `routes: routes` 的缩写
 })
 
