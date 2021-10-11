@@ -1,5 +1,5 @@
 import {defineComponent, onMounted} from 'vue'
-import {HeadType, Message} from "../../protos/Message";
+import {ChatMessage, HeadType} from "../message/message";
 
 export default defineComponent(()=>{
     let ws:WebSocket ;
@@ -16,9 +16,9 @@ export default defineComponent(()=>{
         console.log("connect success")
     }
     const message = (me:MessageEvent<Uint8Array>): void =>{
-        let msg = Message.decode(new Uint8Array(me.data));
+        let msg = ChatMessage.decode(new Uint8Array(me.data));
         console.log("收到数据",msg)
-        if(msg.type == HeadType.LOGIN_RESPONSE){
+        if(msg.headType == HeadType.RESPONSE){
             intervalId = setInterval(heartBeat,10000)
         }
     }
@@ -30,9 +30,9 @@ export default defineComponent(()=>{
                 "type":4,
                 "sequence":1,
             }
-            let msg = Message.fromJSON(heartbeat);
+            let msg = ChatMessage.fromObject(heartbeat);
             console.log("发送心跳包")
-            ws.send(Message.encode(msg).finish())
+            ws.send(ChatMessage.encode(msg).finish())
         }
     }
 
@@ -47,9 +47,10 @@ export default defineComponent(()=>{
         console.log('连接异常');
     }
     const sendMessage = ()=>{
+        let token = localStorage.getItem("token");
         let  loginRequest = {
             "uid":"1",
-            "token":"123456",
+            token,
             "deviceId":"1",
             "platform":4,
             "appVersion":"1.0"
@@ -59,9 +60,9 @@ export default defineComponent(()=>{
             "type":0,
             "sequence":1,
         }
-        let message = Message.fromJSON(msg);
+        let message = ChatMessage.fromObject(msg);
         console.log("发送消息：",message);
-        ws.send(Message.encode(message).finish());
+        ws.send(ChatMessage.encode(message).finish());
 
     }
     onMounted(()=>{

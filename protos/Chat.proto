@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+enum HeadType{
+  LOGIN_REQUEST = 0;//登陆请求
+  LOGOUT_REQUEST = 1;//退出请求
+  KEEPALIVE_REQUEST = 2;//心跳请求PING;
+  MESSAGE_REQUEST = 3;//消息请求;
+  RESPONSE = 4; // 返回
+  MESSAGE_NOTIFICATION = 5;//通知消息
+}
+
+enum Platform{
+  WEB = 0; // 网页
+  IOS = 1; // ios
+  ANDROID = 2; // 安卓
+  PC = 3; // pc
+  WECHAT = 4; // 微信
+}
+
+enum MsgType{
+  TEXT = 0; //文本
+  SOUND = 1; // 声音
+  VIDEO = 2;// 视频
+  GEO = 3; // 地理位置
+  REF = 4; // 外链
+  FILE = 5; // 图片 文件等
+  EMOJI = 6; // 表情
+}
+
+enum NotifiType{
+  FRIEND = 0; // 朋友
+  PUSH = 1; // 推送
+  CIRCLE = 2; // 圈子
+}
+
+enum ResponseType{
+  LOGIN = 0;
+  LOGOUT = 1;
+  KEEPALIVE = 2;
+  MESSAGE = 3;
+}
+
+message LoginRequest{
+  string uid = 1; // 用户id
+  string deviceId = 2; // 设备id
+  string token = 3; // token
+  Platform platform = 4; // 平台 1 web 2 
+  string appVersion = 5; // app版本
+}
+
+
+message LogoutRequest{
+  string uid = 1; // 用户id
+  string token = 2; // token
+}
+
+message KeepAliveRequest{
+  uint64 time = 1; // 发送时间
+}
+
+message MessageRequest{
+  uint64 msg_id = 1; //消息id
+  string from = 2; //发送方uId
+  string to = 3; //接收方uId
+  uint64 time = 4; // 发送时间
+  MsgType msgType = 5; // 消息类型 
+  string content = 6; // 消息体
+  string json = 7; // 补充信息
+}
+
+message Response{
+  bool success = 1; // 是否成功
+  uint32 code = 2; // 错误码
+  string info = 3; // 错误信息
+  string data = 4; // 额外的json信息
+  uint32 responseType = 5; // 回复类型
+}
+
+message Notification{
+  NotifiType notifiType = 1; // 通知类型
+  string sender = 2; // 发送人
+  string content = 3; // 内容
+  uint64 time = 4; // 发送时间
+}
+
+message ChatMessage{
+  HeadType headType = 1; // 消息类型
+  uint64 seq = 2; // 消息序列id
+  LoginRequest loginRequest = 3;
+  LogoutRequest logoutRequest = 4;
+  KeepAliveRequest keepAliveRequest = 5;
+  MessageRequest messageRequest = 6;
+  Response response = 7;
+  Notification notification = 8;
+}

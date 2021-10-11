@@ -7,7 +7,7 @@ import {
 let routes =[
     {
         path:"/",
-        component: ()=> import("../components/Login")
+        component: ()=> import("../components/Chat")
     },
     {
         path: "/chat",
