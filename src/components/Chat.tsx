@@ -1,5 +1,5 @@
 import {defineComponent, onMounted} from 'vue'
-import {ChatMessage, HeadType} from "../message/message";
+import {ChatMessage, HeadType, KeepAliveRequest} from "../../protos/chat.js";
 
 export default defineComponent(()=>{
     let ws:WebSocket ;
@@ -26,11 +26,12 @@ export default defineComponent(()=>{
     const heartBeat = ()=>{
         console.log("连接的状态是",ws.readyState)
         if(ws.readyState>0){
-            let heartbeat = {
-                "type":4,
-                "sequence":1,
-            }
-            let msg = ChatMessage.fromObject(heartbeat);
+
+            let msg = new ChatMessage();
+            let keep = new KeepAliveRequest();
+            keep.time = new Date().getTime();
+            msg.headType = HeadType.KEEPALIVE_REQUEST;
+            msg.keepAliveRequest = keep;
             console.log("发送心跳包")
             ws.send(ChatMessage.encode(msg).finish())
         }

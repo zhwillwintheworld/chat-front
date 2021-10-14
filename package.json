@@ -4,7 +4,7 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview",
-    "pbjs": " pbjs -t static-module -w commonjs --es6 -o protos/chat.js protos/Chat.proto",
+    "pbjs": " pbjs -t static-module -w es6 --es6 -o protos/chat.js protos/Chat.proto",
     "pbts": "pbts -o src/message/message.ts protos/chat.js"
   },
   "dependencies": {
@@ -14,7 +14,6 @@
     "vue": "^3.0.5"
   },
   "devDependencies": {
-    "@protobuf-ts/plugin": "^2.0.6",
     "@vitejs/plugin-vue": "^1.2.3",
     "@vitejs/plugin-vue-jsx": "^1.1.5",
     "@vue/compiler-sfc": "^3.0.5",
