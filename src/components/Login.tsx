@@ -30,7 +30,7 @@ export default defineComponent(()=>{
 
        let validated = await formRef.value.validate();
        let result:AxiosResponse<Result> = await Login(toRaw(formState));
-       if(result.data!=null&&result.data.code === 200){
+       if(result.data!=null&&result.data.code === 1){
            localStorage.setItem("token",result.data.data)
            await router.push("/chat")
        }else{
